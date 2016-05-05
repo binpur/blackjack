@@ -1,6 +1,6 @@
 const BUST_VALUE = 21;
-const HIT = 1;
-const STAND = 2;
+const HIT = "HIT";
+const STAND = "STAND";
 const VALUE_FOR_FACE_CARD = 10;
 const ACE_VALUE_SMALL= 1;
 const ACE_VALUE_BIG= 11;
@@ -57,27 +57,35 @@ const _getNumberOfAvailableCardSmallerThanValue = function (value, playerCards, 
 
 const _getIsPlayerSafeToHit = function (value, playerCards, dealerCard)  {
     const nbUnusedCards = TOTAL_CARDS - playerCards.length - NUMBER_DEALER_CARDS;
-    const nbUnusedCardsSmallerThanValue = _getNumberOfAvailableCardSmallerThanValue(value, playerCards, dealderCard);
+    const nbUnusedCardsSmallerThanValue = _getNumberOfAvailableCardSmallerThanValue(value, playerCards, dealerCard);
     return nbUnusedCardsSmallerThanValue / nbUnusedCards > 0.5;
 };
 
-const play = function(playerCards, dealerCard) {
+
+var player = function(playerCards, dealerCard) {
+    this.playerCards = playerCards;
+    this.dealerCard = dealerCard;
+};
+
+player.prototype.play = function(newCard) {
   // check if player has black jack
-  const playerMaxValue = _getMaxValueOfCards(playerCards);
+  const playerMaxValue = _getMaxValueOfCards(this.playerCards);
   if(playerMaxValue == VALUE_BLACK_JACK) {
     return STAND;
   }
   // check if player will probably bust
-  const playerMinValue = _getMaxValueOfCards(playerCards);
+  const playerMinValue = _getMaxValueOfCards(this.playerCards);
   const minValueForPlayerBust = BUST_VALUE - playerMinValue + 1;
-  const isPlayerSafeToHit = _getIsPlayerSafeToHit(minValueForPlayerBust, playerCards, dealerCard)
+  const isPlayerSafeToHit = _getIsPlayerSafeToHit(minValueForPlayerBust, this.playerCards, this.dealerCard)
   if (isPlayerSafeToHit) {
+    if(newCard !== undefined) {
+      this.playerCards.push(newCard);
+    }
     return HIT;
   }
   return STAND;
 };
 
-// const playerCards = ["1", "1", "1", "1"];
-// const dealderCard = "8";
-// console.log("result=" + play(playerCards, dealderCard));
-play(playerCards, dealderCard);
+// const playerA = new player(["1", "2"], "8");
+// console.log("result=" + playerA.play("1"));
+// console.log("result=" + playerA.playerCards);
