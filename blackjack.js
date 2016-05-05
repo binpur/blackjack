@@ -6,6 +6,7 @@ const ACE_VALUE_SMALL= 1;
 const ACE_VALUE_BIG= 11;
 const TOTAL_CARDS = 52;
 const VALUE_BLACK_JACK = 21;
+const NUMBER_DEALER_CARDS = 2;
 
 
 const _isCardAce = (card) => {
@@ -14,10 +15,6 @@ const _isCardAce = (card) => {
 
 const _isCardFace = (card) => {
   return isNaN(card) && !_isCardAce(card);
-}
-
-const _isCardUnknown = (card) => {
-  return card === "X";
 }
 
 const _getCardValue = (card, countAceSmaller) => {
@@ -46,26 +43,32 @@ const _getMinValueOfCards = (cards) => {
   return sum;
 };
 
-const _getIsPlayerSafeToHit = (minValue, playerCards, dealderCards) => {
-    const nbCardsSmallerThanMinValue = minValue > 10 ? (10 - 1) * 4 : (minValue - 1) * 4;
-    nbCardsSmallerThanMinValue = nbCardsSmallerThanMinValue
-    - playerCards.filter((card)=> _getCardValue(card, true) < minValue).length
-    - dealderCards.filter((card)=> _isCardUnknown(card) || _getCardValue(card, true) < minValue).length;
-    const nbUnusedCards = TOTAL_CARDS - playerCards.length - dealderCards.length;
-    return nbCardsSmallerThanMinValue / nbUnusedCards > 0.5;
+const _getNumberOfAvailableCardSmallerThanValue = (value, playerCards, dealerCard) => {
+    const nbTotalCards = value > 10 ? (10 - 1) * 4 : (value - 1) * 4;
+    // number of cards smaller than the value that are taken by player
+    const nbPlayerTakenCards = playerCards.filter((card)=> _getCardValue(card, true) < value).length;
+    // number of card smaller than the value that is taken by dealer
+    const nbDealerTakenCard = dealerCard < value ? 1 : 0;
+    const nbDealerUnkownCard = 1;
+    return nbTotalCards - nbPlayerTakenCards - nbDealerTakenCard - nbDealerUnkownCard;
 }
 
-const play = (playerCards, dealderCards) => {
+const _getIsPlayerSafeToHit = (value, playerCards, dealderCard) => {
+    const nbUnusedCards = TOTAL_CARDS - playerCards.length - NUMBER_DEALER_CARDS;
+    const nbUnusedCardsSmallerThanValue = _getNumberOfAvailableCardSmallerThanValue(value, playerCards, dealderCard);
+    return nbUnusedCardsSmallerThanValue / nbUnusedCards > 0.5;
+}
+
+const play = (playerCards, dealderCard) => {
   // check if player has black jack
   const playerMaxValue = _getMaxValueOfCards(playerCards);
   if(playerMaxValue == VALUE_BLACK_JACK) {
     return STAND;
   }
-
   // check if player will probably bust
   const playerMinValue = _getMaxValueOfCards(playerCards);
   const minValueForPlayerBust = BUST_VALUE - playerMinValue + 1;
-  const isPlayerSafeToHit = _getIsPlayerSafeToHit(minValueForPlayerBust, playerCards, dealderCards);
+  const isPlayerSafeToHit = _getIsPlayerSafeToHit(minValueForPlayerBust, playerCards, dealerCard)
   if (isPlayerSafeToHit) {
     return HIT;
   }
@@ -73,4 +76,4 @@ const play = (playerCards, dealderCards) => {
 };
 
 
-play(playerCards, dealderCards);
+play(playerCards, dealderCard);
