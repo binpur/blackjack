@@ -14,6 +14,9 @@ dealer.prototype.play = function(newCard) {
   if(delaerMaxValue > 17) {
     return basic.STAND;
   }
+  if(newCard !== undefined) {
+    this.dealerCards.push(newCard);
+  }
   return basic.HIT;
 };
 
