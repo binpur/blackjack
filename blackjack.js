@@ -5,6 +5,7 @@ const VALUE_FOR_FACE_CARD = 10;
 const ACE_VALUE_SMALL= 1;
 const ACE_VALUE_BIG= 11;
 const TOTAL_CARDS = 52;
+const VALUE_BLACK_JACK = 21;
 
 
 const _isCardAce = (card) => {
@@ -51,12 +52,16 @@ const _getIsPlayerSafeToHit = (minValue, playerCards, dealderCards) => {
 }
 
 const play = (playerCards, dealderCards) => {
-  // values
-  const minValueForPlayerBust = BUST_VALUE - _getMinValueOfCards(player) + 1;
+  // check if player has black jack
+  const playerMaxValue = _getMaxValueOfCards(playerCards);
+  if(playerMaxValue == VALUE_BLACK_JACK) {
+    return STAND;
+  }
 
-  // conditions
+  // check if player will probably bust
+  const playerMinValue = _getMaxValueOfCards(playerCards);
+  const minValueForPlayerBust = BUST_VALUE - playerMinValue + 1;
   const isPlayerSafeToHit = _getIsPlayerSafeToHit(minValueForPlayerBust, playerCards, dealderCards);
-
   if (isPlayerSafeToHit) {
     return HIT;
   }
