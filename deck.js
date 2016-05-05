@@ -3,16 +3,20 @@ var deck = function() {
     this.cards = [];
     for(var i = 0; i < 4; i++) {
       this.cards = this.cards.concat(basicCards);
-    }
+    };
+    this.dealOneCard = function() {
+        const numberOfCards = this.cards.length;
+        const randomIndex = Math.floor(Math.random(numberOfCards));
+        const chosenCard = this.cards[randomIndex];
+        this.cards.splice(randomIndex, 1);
+        return chosenCard;
+    };
+    this.dealTwoCards = function() {
+      return [this.dealOneCard(), this.dealOneCard()];
+    };
 };
 
-deck.prototype.dealOneCard = function() {
-    const numberOfCards = this.cards.length;
-    const randomIndex = Math.floor(Math.random(numberOfCards));
-    const chosenCard = this.cards[randomIndex];
-    this.cards.splice(randomIndex);
-};
 
-deck.prototype.dealTwoCards = function() {
-    return [dealOneCard(), dealOneCard()];
-};
+// const deckA = new deck();
+// console.log("result1=" + deckA.dealOneCard());
+// console.log("result2=" + deckA.dealTwoCards());

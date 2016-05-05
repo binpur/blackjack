@@ -20,6 +20,6 @@ dealer.prototype.play = function(newCard) {
   return basic.HIT;
 };
 
-const dealerA = new dealer(["A", "8"]);
-console.log("result=" + dealerA.play("1"));
-console.log("result=" + dealerA.dealerCards);
+// const dealerA = new dealer(["1", "10"]);
+// console.log("result=" + dealerA.play("1"));
+// console.log("result=" + dealerA.dealerCards);

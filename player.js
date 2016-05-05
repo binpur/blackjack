@@ -44,6 +44,6 @@ player.prototype.play = function(newCard) {
   return basic.STAND;
 };
 
- const playerA = new player(["1", "2"], "8");
- console.log("result=" + playerA.play("1"));
- console.log("result=" + playerA.playerCards);
+ // const playerA = new player(["1", "2"], "8");
+ // console.log("result=" + playerA.play("1"));
+ // console.log("result=" + playerA.playerCards);
