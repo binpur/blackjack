@@ -52,15 +52,12 @@ const _getIsPlayerSafeToHit = (minValue, playerCards, dealderCards) => {
 
 const play = (playerCards, dealderCards) => {
   // values
-  const playerMaxValue = _getMaxValueOfCards(playerCards);
-  const dealerMaxValue = _getMaxValueOfCards(dealderCards);
   const minValueForPlayerBust = BUST_VALUE - _getMinValueOfCards(player) + 1;
 
-  // winning conditions
+  // conditions
   const isPlayerSafeToHit = _getIsPlayerSafeToHit(minValueForPlayerBust, playerCards, dealderCards);
-  const isPlayerValueSmallerThanDealer = playerMaxValue < dealerMaxValue;
 
-  if (isPlayerValueSmallerThanDealer || isPlayerSafeToHit) {
+  if (isPlayerSafeToHit) {
     return HIT;
   }
   return STAND;
