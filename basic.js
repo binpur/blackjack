@@ -29,10 +29,10 @@ module.exports = {
     return sum;
   },
   _getMaxValueOfCards : function (cards)  {
-    return this._getValueOfCards(false);
+    return this._getValueOfCards(cards, false);
   },
   _getMinValueOfCards : function (cards)  {
-    return this._getValueOfCards(true);
+    return this._getValueOfCards(cards,true);
   },
 
   _hasBlackJack: function(cards) {
