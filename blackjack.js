@@ -16,6 +16,10 @@ const _isCardFace = (card) => {
   return isNaN(card) && !_isCardAce(card);
 }
 
+const _isCardUnknown = (card) => {
+  return card === "X";
+}
+
 const _getCardValue = (card, countAceSmaller) => {
   if(_isCardAce(card) {
     return countAceSmaller ? ACE_VALUE_SMALL : ACE_VALUE_BIG;
@@ -46,9 +50,9 @@ const _getIsPlayerSafeToHit = (minValue, playerCards, dealderCards) => {
     const nbCardsSmallerThanMinValue = minValue > 10 ? (10 - 1) * 4 : (minValue - 1) * 4;
     nbCardsSmallerThanMinValue = nbCardsSmallerThanMinValue
     - playerCards.filter((card)=> _getCardValue(card, true) < minValue).length
-    - dealderCards.filter((card)=> _getCardValue(card, true) < minValue).length;
-    const nbRestCards = TOTAL_CARDS - playerCards.length - dealderCards.length;
-    return nbCardsSmallerThanMinValue / nbRestCards > 0.5;
+    - dealderCards.filter((card)=> _isCardUnknown(card) || _getCardValue(card, true) < minValue).length;
+    const nbUnusedCards = TOTAL_CARDS - playerCards.length - dealderCards.length;
+    return nbCardsSmallerThanMinValue / nbUnusedCards > 0.5;
 }
 
 const play = (playerCards, dealderCards) => {
