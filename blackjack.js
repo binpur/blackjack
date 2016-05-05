@@ -15,7 +15,7 @@ const _isCardFace = (card) => {
   return isNaN(card) && !_isCardAce(card);
 }
 
-const _getCardValue = (card, countAceSmaller = false) => {
+const _getCardValue = (card, countAceSmaller) => {
   if(_isCardAce(card) {
     return countAceSmaller ? ACE_VALUE_SMALL : ACE_VALUE_BIG;
   }
@@ -25,15 +25,7 @@ const _getCardValue = (card, countAceSmaller = false) => {
  return parseInt(card);
 };
 
-const _getMaxValue = (cards) => {
-  let sum = 0;
-  for (let i = 0; i< cards.length; i++) {
-      sum = sum + _getCardValue(cards[i], true);
-  }
-  return sum;
-};
-
-const _getMinValue = (cards) => {
+const _getMaxValueOfCards = (cards) => {
   let sum = 0;
   for (let i = 0; i< cards.length; i++) {
       sum = sum + _getCardValue(cards[i], false);
@@ -41,20 +33,28 @@ const _getMinValue = (cards) => {
   return sum;
 };
 
+const _getMinValueOfCards = (cards) => {
+  let sum = 0;
+  for (let i = 0; i< cards.length; i++) {
+      sum = sum + _getCardValue(cards[i], true);
+  }
+  return sum;
+};
+
 const _getIsPlayerSafeToHit = (minValue, playerCards, dealderCards) => {
     const nbCardsSmallerThanMinValue = minValue > 10 ? (10 - 1) * 4 : (minValue - 1) * 4;
     nbCardsSmallerThanMinValue = nbCardsSmallerThanMinValue
-    - playerCards.filter((card)=> _getCardValue(card) < minValue).length
-    - dealderCards.filter((card)=> _getCardValue(card) < minValue).length;
+    - playerCards.filter((card)=> _getCardValue(card, true) < minValue).length
+    - dealderCards.filter((card)=> _getCardValue(card, true) < minValue).length;
     const nbRestCards = TOTAL_CARDS - playerCards.length - dealderCards.length;
     return nbCardsSmallerThanMinValue / nbRestCards > 0.5;
 }
 
 const play = (playerCards, dealderCards) => {
   // values
-  const playerMaxValue = _getMaxValue(playerCards);
-  const dealerMaxValue = _getMaxValue(dealderCards);
-  const minValueForPlayerBust = BUST_VALUE - _getMinValue(player) + 1;
+  const playerMaxValue = _getMaxValueOfCards(playerCards);
+  const dealerMaxValue = _getMaxValueOfCards(dealderCards);
+  const minValueForPlayerBust = BUST_VALUE - _getMinValueOfCards(player) + 1;
 
   // winning conditions
   const isPlayerSafeToHit = _getIsPlayerSafeToHit(minValueForPlayerBust, playerCards, dealderCards);
