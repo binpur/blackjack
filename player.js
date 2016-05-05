@@ -1,6 +1,5 @@
 var basic = require('./basic.js');
 const BUST_VALUE = 21;
-const VALUE_BLACK_JACK = 21;
 const NUMBER_DEALER_CARDS = 2;
 
 const _getNumberOfAvailableCardSmallerThanValue = function (value, playerCards, dealerCard) {
@@ -35,7 +34,7 @@ player.prototype.play = function(newCard) {
   // check if player will probably bust
   const playerMinValue = basic._getMaxValueOfCards(this.playerCards);
   const minValueForPlayerBust = BUST_VALUE - playerMinValue + 1;
-  const isPlayerSafeToHit = _getIsPlayerSafeToHit(minValueForPlayerBust, this.playerCards, this.dealerCard)
+  const isPlayerSafeToHit = _getIsPlayerSafeToHit(minValueForPlayerBust, this.playerCards, this.dealerCard);
   if (isPlayerSafeToHit) {
     if(newCard !== undefined) {
       this.playerCards.push(newCard);
