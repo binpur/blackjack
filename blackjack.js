@@ -25,35 +25,21 @@ const _getCardValue = (card, countAceSmaller = false) => {
  return parseInt(card);
 };
 
-const _getCurrentValue = (cards) => {
+const _getMaxValue = (cards) => {
   let sum = 0;
-  let numberOfAce = 0;
   for (let i = 0; i< cards.length; i++) {
-    let card = cards[i];
-    if(_isCardAce(card)) {
-      numberOfAce++;
-    }else{
-      sum = sum + _getCardValue(cards[i]);
-    }
+      sum = sum + _getCardValue(cards[i], true);
   }
-  return _getValueOfAces(numberOfAce).map((value) => value + sum);
+  return sum;
 };
 
-const _getValueOfAces(numberOfAce) {
-  switch (numberOfAce) {
-    case 0:
-      return {0};
-    case 1:
-      return {1, 11};
-    case 2:
-      return {2, 12};
-    case 3:
-      return {3, 13};
-    case 4:
-      return {4, 14};
-    default: {0};
+const _getMinValue = (cards) => {
+  let sum = 0;
+  for (let i = 0; i< cards.length; i++) {
+      sum = sum + _getCardValue(cards[i], false);
   }
-}
+  return sum;
+};
 
 const _getIsPlayerSafeToHit = (minValue, playerCards, dealderCards) => {
     const nbCardsSmallerThanMinValue = minValue > 10 ? (10 - 1) * 4 : (minValue - 1) * 4;
@@ -66,13 +52,13 @@ const _getIsPlayerSafeToHit = (minValue, playerCards, dealderCards) => {
 
 const play = (playerCards, dealderCards) => {
   // values
-  const playerCurrentValue = _getCurrentValue(playerCards);
-  const dealerCurrentValue = _getCurrentValue(dealderCards);
-  const minValueForPlayerBust = BUST_VALUE - playerCurrentValue + 1;
+  const playerMaxValue = _getMaxValue(playerCards);
+  const dealerMaxValue = _getMaxValue(dealderCards);
+  const minValueForPlayerBust = BUST_VALUE - _getMinValue(player) + 1;
 
   // winning conditions
   const isPlayerSafeToHit = _getIsPlayerSafeToHit(minValueForPlayerBust, playerCards, dealderCards);
-  const isPlayerValueSmallerThanDealer = playerCurrentValue < dealerCurrentValue;
+  const isPlayerValueSmallerThanDealer = playerMaxValue < dealerMaxValue;
 
   if (isPlayerValueSmallerThanDealer || isPlayerSafeToHit) {
     return HIT;
